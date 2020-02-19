@@ -111,6 +111,12 @@ public class MainActivity extends AppCompatActivity {
         return builder.build();
     }
 
+
+    /**
+     * This method starts (or updates) a GeofenceBroadcastReceiver, that handles all the
+     * Geofence transitions at runtime.
+     * @return PendingIntent: a PendingIntent object that represents the BroadcastReceiver
+     */
     private PendingIntent getGeofencePendingIntent(){
         // Reuse the PendingIntent if we already have it.
         if(geofencePendingIntent != null){
