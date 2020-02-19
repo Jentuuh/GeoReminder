@@ -12,7 +12,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <receiver android:name=".GeofenceBroadcastReceiver"></receiver>
+        <receiver android:name=".GeofenceBroadcastReceiver"/>
 
         <activity android:name=".MainActivity" >
             <intent-filter>

@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">GeoReminder</string>
     <string name="title_activity_maps">Map</string>
+    <string name="geofence_transition_entered">Entered a Geofence</string>
+    <string name="geofence_transition_exited">Exited a Geofence</string>
+    <string name="unknown_transition">An unknown transition took place</string>
 </resources>
