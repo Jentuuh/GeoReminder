@@ -7,9 +7,11 @@ import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingClient;
@@ -34,10 +36,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        geofenceList = new ArrayList<>();
 
         // Ask the user for permission to use their location, if it wasn't granted already
-        if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-            != PackageManager.PERMISSION_GRANTED){
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
 
             // Permission is not granted (yet)
             // We ask the user for permission
@@ -46,9 +49,46 @@ public class MainActivity extends AppCompatActivity {
                     Constants.MY_PERMISSIONS_REQUEST_USE_LOCATION);
 
             // MY_PERMISSIONS_REQUEST_USE_LOCATION is a constant that contains the requestcode of the permission
-        }
-        else {
+        } else {
             // Permission is granted, we can start using the Location services
+            initializeGeofence();
+
+        }
+    }
+
+
+
+    /**
+     * Method that will be executed after the user answers the permission request
+     * @param requestCode : The same code that is passed from the callback requestPermissions() method
+     * @param permissions : The permissions that need to be checked for
+     * @param grantResults : The result array (the answers of the user)
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults){
+        switch (requestCode){
+            case Constants.MY_PERMISSIONS_REQUEST_USE_LOCATION: {
+                // If request is cancelled, the result arrays are empty.
+                if(grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // PERMISSION GRANTED
+                    initializeGeofence();
+
+                } else {
+                    // PERMISSION DENIED
+                    makeToast("No permission for location services.");
+                }
+            }
+        }
+
+    }
+
+    /**
+     * Method that initializes and creates our test Geofence, used in onCreate() if permission for
+     * location services were already granted, or in onRequestPermissionsResult if they are granted
+     * right after the permission request.
+     */
+    private void initializeGeofence(){
             // Creating instance of a Geofencing client (necessary to access the location APIs)
             geofencingClient = LocationServices.getGeofencingClient(this);
 
@@ -64,19 +104,26 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void onSuccess(Void aVoid) {
                             // Geofences were added
-                            // TODO: make toast or dialog to notify this
+                            // Display this with a Toast
+                            makeToast("Geofence was added!");
                         }
                     })
                     .addOnFailureListener(this, new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
                             // Failed to add geofences
-                            // TODO: make toast or dialog to notify this
+                            // Display this with a Toast
+                            makeToast("Failed to add geofence!");
                         }
                     });
         }
 
-    }
+        private void makeToast(CharSequence toastmessage){
+            Context context = getApplicationContext();
+            int duration = Toast.LENGTH_LONG;
+            Toast.makeText(context, toastmessage, duration).show();
+        }
+
 
 
 
@@ -129,6 +176,4 @@ public class MainActivity extends AppCompatActivity {
                 PendingIntent.FLAG_UPDATE_CURRENT);
         return geofencePendingIntent;
     }
-
-
 }
