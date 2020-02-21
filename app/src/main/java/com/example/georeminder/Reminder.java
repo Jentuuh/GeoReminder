@@ -2,7 +2,7 @@ package com.example.georeminder;
 
 /**
  * @author jentevandersanden
- * This class represents the data objects used to save a reminder (also represented in the database)
+ * This class represents the data objects used to initialize a Geofence (also represented in the database by ReminderEntity)
  */
 public class Reminder {
     private String geofenceID;

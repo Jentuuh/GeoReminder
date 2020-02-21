@@ -1,4 +1,6 @@
 package com.example.georeminder;
+import android.content.pm.PackageManager;
+
 import androidx.room.*;
 
 import java.util.List;
@@ -16,6 +18,10 @@ public interface reminderDAO {
      */
     @Query("SELECT * FROM reminder")
     List<ReminderEntity> getAll();
+
+
+    @Query("SELECT ID FROM reminder WHERE ID LIKE :reminderID")
+            String getID(String reminderID);
 
     /**
      * Gets the longitude of a certain reminder
@@ -45,7 +51,7 @@ public interface reminderDAO {
      * Inserts a new ReminderEntity into the database
      * @param reminder : reminder to be inserted
      */
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insertReminder(ReminderEntity reminder);
 
     /**

@@ -21,6 +21,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author jentevandersanden
@@ -29,7 +30,7 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
 
     private GeofencingClient geofencingClient;
-    private ArrayList<Geofence> geofenceList;
+    private List<Geofence> geofenceList;
     private PendingIntent geofencePendingIntent;
     private AppDatabase reminderDatabase;
 
@@ -37,12 +38,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        geofenceList = new ArrayList<>();
+        geofenceList = new ArrayList<Geofence>();
 
         // Initialize the database
         reminderDatabase = AppDatabase.getReminderDatabase(this);
 
-        // Add test reminder into the database
+        //Add a test ReminderEntity to the database, with ID "002" and "003" (if there's already
+        // a ReminderEntity with either of these ID's this line is ignored.
         DatabasePopulator.addTestReminder(reminderDatabase);
 
         // Ask the user for permission to use their location, if it wasn't granted already
@@ -62,7 +64,6 @@ public class MainActivity extends AppCompatActivity {
 
         }
     }
-
 
     /**
      * Method that will be executed after the user answers the permission request
@@ -99,8 +100,9 @@ public class MainActivity extends AppCompatActivity {
             // Creating instance of a Geofencing client (necessary to access the location APIs)
             geofencingClient = LocationServices.getGeofencingClient(this);
 
-            // Sample data
-            Reminder testreminder = new Reminder("001", "You just entered the area!", 5.391212, 50.925665);
+            // Sample data, Reminder fetched from our database (with ID '002')
+            Reminder testreminder = new Reminder("002", reminderDatabase.reminderDAO().getMessage("002"),
+                    reminderDatabase.reminderDAO().getLongitude("002"), reminderDatabase.reminderDAO().getLongitude("002"));
 
             // Adds a geofence to our list of geofences
             createGeofence(testreminder);
