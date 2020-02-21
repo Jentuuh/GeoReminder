@@ -31,12 +31,19 @@ public class MainActivity extends AppCompatActivity {
     private GeofencingClient geofencingClient;
     private ArrayList<Geofence> geofenceList;
     private PendingIntent geofencePendingIntent;
+    private AppDatabase reminderDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         geofenceList = new ArrayList<>();
+
+        // Initialize the database
+        reminderDatabase = AppDatabase.getReminderDatabase(this);
+
+        // Add test reminder into the database
+        DatabasePopulator.addTestReminder(reminderDatabase);
 
         // Ask the user for permission to use their location, if it wasn't granted already
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
@@ -82,6 +89,8 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+
+
 
     /**
      * Method that initializes and creates our test Geofence, used in onCreate() if permission for
@@ -176,4 +185,6 @@ public class MainActivity extends AppCompatActivity {
                 PendingIntent.FLAG_UPDATE_CURRENT);
         return geofencePendingIntent;
     }
+
+
 }
