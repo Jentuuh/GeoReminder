@@ -64,7 +64,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
     /**
      * Method that will be executed after the user answers the permission request
      * @param requestCode : The same code that is passed from the callback requestPermissions() method
@@ -89,7 +88,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
-
 
 
     /**
