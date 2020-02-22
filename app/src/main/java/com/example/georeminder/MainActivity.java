@@ -11,6 +11,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.Geofence;
@@ -34,6 +36,10 @@ public class MainActivity extends AppCompatActivity {
     private PendingIntent geofencePendingIntent;
     private AppDatabase reminderDatabase;
 
+    private ListView reminderListView;
+    private ArrayAdapter<String> reminderAdapter;
+    private List<ReminderEntity> reminders;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +48,22 @@ public class MainActivity extends AppCompatActivity {
 
         // Initialize the database
         reminderDatabase = AppDatabase.getReminderDatabase(this);
+
+        reminderListView = (ListView) findViewById(R.id.reminderlist);
+
+        // Query for the reminders in the database
+        reminders = reminderDatabase.reminderDAO().getAll();
+
+        ArrayList<String> reminderIDs = new ArrayList<>();
+
+        // Initialize the list of ID strings, used by the adapter to place into the ListView
+        for (int i = 0 ; i < reminders.size(); i++){
+            reminderIDs.add(reminders.get(i).getID());
+        }
+        reminderAdapter = new ArrayAdapter<String>(this, R.layout.listitem, reminderIDs);
+
+        // Sets the reminderAdapter as the arrayadapter for the ListView of reminders
+        reminderListView.setAdapter(reminderAdapter);
 
         //Add a test ReminderEntity to the database, with ID "002" and "003" (if there's already
         // a ReminderEntity with either of these ID's this line is ignored.
