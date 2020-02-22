@@ -27,7 +27,8 @@ import java.util.List;
 
 /**
  * @author jentevandersanden
- * This class provides the integration of Geofences within the application.
+ * This class is the Main Activity, started when the app starts. It provides the integration of
+ * Geofences within the application, the Rooms database is also initialized here.
  */
 public class MainActivity extends AppCompatActivity {
 
