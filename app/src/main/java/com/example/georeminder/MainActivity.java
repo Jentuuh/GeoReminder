@@ -49,21 +49,8 @@ public class MainActivity extends AppCompatActivity {
         // Initialize the database
         reminderDatabase = AppDatabase.getReminderDatabase(this);
 
-        reminderListView = (ListView) findViewById(R.id.reminderlist);
-
-        // Query for the reminders in the database
-        reminders = reminderDatabase.reminderDAO().getAll();
-
-        ArrayList<String> reminderIDs = new ArrayList<>();
-
-        // Initialize the list of ID strings, used by the adapter to place into the ListView
-        for (int i = 0 ; i < reminders.size(); i++){
-            reminderIDs.add(reminders.get(i).getID());
-        }
-        reminderAdapter = new ArrayAdapter<String>(this, R.layout.listitem, reminderIDs);
-
-        // Sets the reminderAdapter as the arrayadapter for the ListView of reminders
-        reminderListView.setAdapter(reminderAdapter);
+        // Fill the ListView with ID's of all the reminders in the database
+        initializeListView();
 
         //Add a test ReminderEntity to the database, with ID "002" and "003" (if there's already
         // a ReminderEntity with either of these ID's this line is ignored.
@@ -83,7 +70,6 @@ public class MainActivity extends AppCompatActivity {
         } else {
             // Permission is granted, we can start using the Location services
             initializeGeofence();
-
         }
     }
 
@@ -149,7 +135,36 @@ public class MainActivity extends AppCompatActivity {
                     });
         }
 
-        private void makeToast(CharSequence toastmessage){
+
+    /**
+     * Method that fetches all reminders from the database, creates the custom ArrayAdapter for the
+     * ListView that contains all the Reminder ID's, and make sure they're displayed in that
+     * ListView.
+     */
+    private void initializeListView(){
+            reminderListView = (ListView) findViewById(R.id.reminderlist);
+
+            // Query for the reminders in the database
+            reminders = reminderDatabase.reminderDAO().getAll();
+
+            ArrayList<String> reminderIDs = new ArrayList<>();
+
+            // Initialize the list of ID strings, used by the adapter to place into the ListView
+            for (int i = 0 ; i < reminders.size(); i++){
+                reminderIDs.add(reminders.get(i).getID());
+            }
+            reminderAdapter = new ArrayAdapter<String>(this, R.layout.listitem, reminderIDs);
+
+            // Sets the reminderAdapter as the arrayadapter for the ListView of reminders
+            reminderListView.setAdapter(reminderAdapter);
+        }
+
+
+    /**
+     * Method that displays a Toast on the screen.
+     * @param toastmessage : String message to be displayed
+     */
+    private void makeToast(CharSequence toastmessage){
             Context context = getApplicationContext();
             int duration = Toast.LENGTH_LONG;
             Toast.makeText(context, toastmessage, duration).show();
