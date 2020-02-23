@@ -1,10 +1,13 @@
 package com.example.georeminder;
 
+import androidx.core.view.ViewCompat;
 import androidx.fragment.app.FragmentActivity;
 
+import android.media.Image;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -21,6 +24,7 @@ public class NewReminderActivity extends FragmentActivity implements OnMapReadyC
     private SeekBar radiusBar;
     private TextView radiusDescription;
     private EditText message;
+    private ImageView marker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,12 +40,15 @@ public class NewReminderActivity extends FragmentActivity implements OnMapReadyC
         radiusBar = (SeekBar) findViewById(R.id.radiusBar);
         radiusDescription = (TextView) findViewById(R.id.radiusDescription);
         message = (EditText) findViewById(R.id.message);
+        marker = (ImageView) findViewById(R.id.marker);
 
         instructionTitle.setVisibility(View.GONE);
         instructionSubtitle.setVisibility(View.GONE);
         radiusBar.setVisibility(View.GONE);
         radiusDescription.setVisibility(View.GONE);
         message.setVisibility(View.GONE);
+
+        ViewCompat.setTranslationZ(marker, 2);
     }
 
 
