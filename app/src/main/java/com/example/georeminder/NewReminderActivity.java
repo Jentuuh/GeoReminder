@@ -4,17 +4,23 @@ import androidx.fragment.app.FragmentActivity;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.SeekBar;
+import android.widget.TextView;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
+
 
 public class NewReminderActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
+    private TextView instructionTitle;
+    private TextView instructionSubtitle;
+    private SeekBar radiusBar;
+    private TextView radiusDescription;
+    private EditText message;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,11 +31,17 @@ public class NewReminderActivity extends FragmentActivity implements OnMapReadyC
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        instructionTitle.visibility = View.GONE;
-        instructionSubtitle.visibility = View.GONE;
-        radiusBar.visibility = View.GONE;
-        radiusDescription.visibility = View.GONE;
-        message.visibility = View.GONE;
+        instructionTitle = (TextView) findViewById(R.id.instructionTitle);
+        instructionSubtitle = (TextView) findViewById(R.id.instructionSubtitle);
+        radiusBar = (SeekBar) findViewById(R.id.radiusBar);
+        radiusDescription = (TextView) findViewById(R.id.radiusDescription);
+        message = (EditText) findViewById(R.id.message);
+
+        instructionTitle.setVisibility(View.GONE);
+        instructionSubtitle.setVisibility(View.GONE);
+        radiusBar.setVisibility(View.GONE);
+        radiusDescription.setVisibility(View.GONE);
+        message.setVisibility(View.GONE);
     }
 
 
@@ -46,9 +58,14 @@ public class NewReminderActivity extends FragmentActivity implements OnMapReadyC
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        showLocationSetup();
+    }
+
+    public void showLocationSetup() {
+        instructionTitle.setVisibility(View.VISIBLE);
+        instructionSubtitle.setVisibility(View.VISIBLE);
+        radiusBar.setVisibility(View.GONE);
+        radiusDescription.setVisibility(View.GONE);
+        message.setVisibility(View.GONE);
     }
 }

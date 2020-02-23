@@ -6,7 +6,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -23,6 +22,7 @@ import com.google.android.gms.location.GeofencingRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
 
     private ListView reminderListView;
     private ReminderAdapter reminderAdapter;
+    private FloatingActionButton addButton;
     private List<ReminderEntity> reminders;
 
     @Override
@@ -57,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
         DatabasePopulator.addTestReminder(reminderDatabase);
 
         // Fill the ListView with ID's of all the reminders in the database
-            initializeListView();
+        initializeListView();
 
         // Ask the user for permission to use their location, if it wasn't granted already
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
@@ -74,6 +75,9 @@ public class MainActivity extends AppCompatActivity {
             // Permission is granted, we can start using the Location services
             initializeGeofence();
         }
+
+        // Add button functionality
+        setupAddButtonListener();
     }
 
     /**
@@ -234,5 +238,17 @@ public class MainActivity extends AppCompatActivity {
         return geofencePendingIntent;
     }
 
-
+    /**
+     * Method that sets up the listener of addButton
+     */
+    public void setupAddButtonListener() {
+        addButton = (FloatingActionButton)  findViewById(R.id.addButton);
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent addIntent = new Intent(getApplicationContext(), NewReminderActivity.class);
+                startActivity(addIntent);
+            }
+        });
+    }
 }
