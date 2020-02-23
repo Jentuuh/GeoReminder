@@ -2,17 +2,19 @@ package com.example.georeminder;
 
 import androidx.fragment.app.FragmentActivity;
 
+import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
-
     private GoogleMap mMap;
 
     @Override
@@ -39,9 +41,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        Intent intent = getIntent();
+        String id = intent.getStringExtra("ID");
+        double longtitude = intent.getDoubleExtra("LONG", 0);
+        double latitude = intent.getDoubleExtra("LAT", 0);
+        float radius = intent.getFloatExtra("RADIUS", 0);
+
+        // Show geofence from reminder and move/zoom the camera to it
+        LatLng reminderPlace = new LatLng(latitude, longtitude);
+        mMap.addMarker(new MarkerOptions().position(reminderPlace).title(id));
+        mMap.addCircle(new CircleOptions()
+                .center(reminderPlace)
+                .radius(radius)
+                .strokeColor(Color.RED)
+                .fillColor(Color.BLUE));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(reminderPlace));
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(reminderPlace,
+                Constants.MAP_ZOOM));
     }
 }

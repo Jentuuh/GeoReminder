@@ -22,6 +22,8 @@ public class ReminderEntity{
     @ColumnInfo(name = "latitude")
     private double latitude;
 
+    @ColumnInfo(name = "radius")
+    private float radius;
 
     /** GETTERS AND SETTERS*/
     public String getID() {
@@ -54,5 +56,13 @@ public class ReminderEntity{
 
     public void setLatitude(double latitude) {
         this.latitude = latitude;
+    }
+
+    public float getRadius() {
+        return radius;
+    }
+
+    public void setRadius(float radius) {
+        this.radius = radius;
     }
 }

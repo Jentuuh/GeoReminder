@@ -6,6 +6,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -51,12 +52,12 @@ public class MainActivity extends AppCompatActivity {
         // Initialize the database
         reminderDatabase = AppDatabase.getReminderDatabase(this);
 
-        // Fill the ListView with ID's of all the reminders in the database
-        initializeListView();
-
         //Add a test ReminderEntity to the database, with ID "003" (if there's already
         // a ReminderEntity with either of these ID's this line is ignored.
         DatabasePopulator.addTestReminder(reminderDatabase);
+
+        // Fill the ListView with ID's of all the reminders in the database
+        initializeListView();
 
         // Ask the user for permission to use their location, if it wasn't granted already
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
@@ -157,11 +158,13 @@ public class MainActivity extends AppCompatActivity {
 
             reminderListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
-                public void onItemClick(AdapterView parent, View v, int position, long id) {
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     ReminderEntity reminder = reminders.get(position);
                     Intent showReminderIntent = new Intent(getApplicationContext(), MapsActivity.class);
-                    showReminderIntent.putExtra("LAT", reminder.getLatitude());
+                    showReminderIntent.putExtra("ID", reminder.getID());
                     showReminderIntent.putExtra("LONG", reminder.getLongitude());
+                    showReminderIntent.putExtra("LAT", reminder.getLatitude());
+                    showReminderIntent.putExtra("RADIUS", reminder.getRadius());
                     startActivity(showReminderIntent);
                 }
             });
@@ -176,7 +179,7 @@ public class MainActivity extends AppCompatActivity {
             Context context = getApplicationContext();
             int duration = Toast.LENGTH_LONG;
             Toast.makeText(context, toastmessage, duration).show();
-        }
+    }
 
 
 

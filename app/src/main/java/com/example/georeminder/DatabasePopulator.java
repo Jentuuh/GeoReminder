@@ -32,10 +32,12 @@ public class DatabasePopulator{
      * @param db : The database instance
      */
     public static void addTestReminder(AppDatabase db){
+            db.reminderDAO().deleteAll();
             ReminderEntity reminder = new ReminderEntity();
             reminder.setID("003");
             reminder.setLongitude(5.391212);
             reminder.setLatitude(50.925665);
+            reminder.setRadius(500f);
             reminder.setMessage("You've just entered the area!");
             addReminder(db, reminder);
     }
