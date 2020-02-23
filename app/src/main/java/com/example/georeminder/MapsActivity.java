@@ -10,6 +10,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -50,13 +51,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // Show geofence from reminder and move/zoom the camera to it
         LatLng reminderPlace = new LatLng(latitude, longtitude);
         mMap.addMarker(new MarkerOptions().position(reminderPlace).title(id));
-        mMap.addCircle(new CircleOptions()
-                .center(reminderPlace)
-                .radius(radius)
-                .strokeColor(Color.RED)
-                .fillColor(Color.BLUE));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(reminderPlace));
+        mMap.addCircle(new CircleOptions()
+                        .center(reminderPlace)
+                        .radius(radius)
+                        .strokeColor(Color.RED)
+                        .fillColor(0x2500ff00));
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(reminderPlace,
-                Constants.MAP_ZOOM));
+                getZoomLevel(radius)));
+    }
+
+    public int getZoomLevel(float radius) {
+        double scale = radius / 500;
+        int zoomLevel =(int) (16 - Math.log(scale) / Math.log(2));
+        return zoomLevel - 1;
     }
 }

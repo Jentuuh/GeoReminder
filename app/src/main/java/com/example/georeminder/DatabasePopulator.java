@@ -32,7 +32,6 @@ public class DatabasePopulator{
      * @param db : The database instance
      */
     public static void addTestReminder(AppDatabase db){
-            db.reminderDAO().deleteAll();
             ReminderEntity reminder = new ReminderEntity();
             reminder.setID("003");
             reminder.setLongitude(5.391212);

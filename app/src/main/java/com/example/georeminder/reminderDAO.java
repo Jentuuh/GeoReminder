@@ -19,12 +19,12 @@ public interface reminderDAO {
     @Query("SELECT * FROM reminder")
     List<ReminderEntity> getAll();
 
-    /**
-     * Deletes all reminders from the database
-     * @return
-     */
-    @Query("DELETE FROM reminder")
-    void deleteAll();
+      /**
+       * Deletes all reminders from the database
+       * @return
+       */
+      @Query("DELETE FROM reminder")
+      void deleteAll();
 
 
     @Query("SELECT ID FROM reminder WHERE ID LIKE :reminderID")
@@ -54,13 +54,13 @@ public interface reminderDAO {
     @Query("SELECT message FROM reminder where ID LIKE :reminderID")
     String getMessage(String reminderID);
 
-    /**
-     * Gets the remindermessage of a certain reminder
-     * @param reminderID : ID of the reminder you're looking for
-     * @return : Returns the radius of the reminder we were looking for.
-     */
-    @Query("SELECT radius FROM reminder where ID LIKE :reminderID")
-    Float getRadius(String reminderID);
+       /**
+       * Gets the radius of a certain reminder
+       * @param reminderID : ID of the reminder you're looking for
+       * @return : Returns the radius of the reminder we were looking for.
+       */
+      @Query("SELECT radius FROM reminder where ID LIKE :reminderID")
+      Float getRadius(String reminderID);
 
 
     /**

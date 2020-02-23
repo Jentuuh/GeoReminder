@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
         DatabasePopulator.addTestReminder(reminderDatabase);
 
         // Fill the ListView with ID's of all the reminders in the database
-        initializeListView();
+            initializeListView();
 
         // Ask the user for permission to use their location, if it wasn't granted already
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
@@ -196,7 +196,7 @@ public class MainActivity extends AppCompatActivity {
                 .setCircularRegion(
                         reminder.getLatitude(),
                         reminder.getLongitude(),
-                        Constants.GEOFENCE_RADIUS_IN_METERS)
+                        5000f)
                 .setExpirationDuration(Geofence.NEVER_EXPIRE)
                 .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER).build());
     }
