@@ -19,13 +19,13 @@ import java.util.List;
  * This class is the Geofence implementation of the BroadcastReceiver class, a
  */
 public class GeofenceBroadcastReceiver extends BroadcastReceiver {
-
+    private static final String TAG = "GeofenceBroadcast";
     @Override
     public void onReceive(Context context, Intent intent) {
         GeofencingEvent geofencingEvent = GeofencingEvent.fromIntent(intent);
         if(geofencingEvent.hasError()) {
             String errorMessage = GeofenceStatusCodes.getStatusCodeString(geofencingEvent.getErrorCode());
-            Log.e("TAG", errorMessage);
+            Log.e(TAG, errorMessage);
             return;
         }
 
@@ -45,11 +45,11 @@ public class GeofenceBroadcastReceiver extends BroadcastReceiver {
             // Send a notification + log the transition details
             //TODO: send a notification
 
-            Log.i("TAG", geofenceTransitionDetails);
+            Log.i(TAG, geofenceTransitionDetails);
         }
         else {
             // Log the occured error
-            Log.e("TAG", "Invalid transition type");
+            Log.e(TAG, "Invalid transition type");
         }
     }
 

@@ -11,7 +11,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.widget.ArrayAdapter;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -38,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
     private AppDatabase reminderDatabase;
 
     private ListView reminderListView;
-    private ArrayAdapter<String> reminderAdapter;
+    private ReminderAdapter reminderAdapter;
     private List<ReminderEntity> reminders;
 
     @Override
@@ -53,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
         // Fill the ListView with ID's of all the reminders in the database
         initializeListView();
 
-        //Add a test ReminderEntity to the database, with ID "002" and "003" (if there's already
+        //Add a test ReminderEntity to the database, with ID "003" (if there's already
         // a ReminderEntity with either of these ID's this line is ignored.
         DatabasePopulator.addTestReminder(reminderDatabase);
 
@@ -109,12 +110,9 @@ public class MainActivity extends AppCompatActivity {
             // Creating instance of a Geofencing client (necessary to access the location APIs)
             geofencingClient = LocationServices.getGeofencingClient(this);
 
-            // Sample data, Reminder fetched from our database (with ID '002')
-            Reminder testreminder = new Reminder("002", reminderDatabase.reminderDAO().getMessage("002"),
-                    reminderDatabase.reminderDAO().getLongitude("002"), reminderDatabase.reminderDAO().getLongitude("002"));
-
-            // Adds a geofence to our list of geofences
-            createGeofence(testreminder);
+            // Adds geofences (reminders) from database to the list of geofences
+            for (ReminderEntity reminder : reminders)
+                createGeofence(reminder);
 
             // We add our list of created geofence-objects to the application
             geofencingClient.addGeofences(getGeofencingRequest(), getGeofencePendingIntent())
@@ -148,16 +146,25 @@ public class MainActivity extends AppCompatActivity {
             // Query for the reminders in the database
             reminders = reminderDatabase.reminderDAO().getAll();
 
-            ArrayList<String> reminderIDs = new ArrayList<>();
+            // If database empty initialize new list
+            if (reminders == null)
+                reminders = new ArrayList<ReminderEntity>();
 
-            // Initialize the list of ID strings, used by the adapter to place into the ListView
-            for (int i = 0 ; i < reminders.size(); i++){
-                reminderIDs.add(reminders.get(i).getID());
-            }
-            reminderAdapter = new ArrayAdapter<String>(this, R.layout.listitem, reminderIDs);
+            reminderAdapter = new ReminderAdapter(this, reminders, reminderDatabase);
 
             // Sets the reminderAdapter as the arrayadapter for the ListView of reminders
             reminderListView.setAdapter(reminderAdapter);
+
+            reminderListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView parent, View v, int position, long id) {
+                    ReminderEntity reminder = reminders.get(position);
+                    Intent showReminderIntent = new Intent(getApplicationContext(), MapsActivity.class);
+                    showReminderIntent.putExtra("LAT", reminder.getLatitude());
+                    showReminderIntent.putExtra("LONG", reminder.getLongitude());
+                    startActivity(showReminderIntent);
+                }
+            });
         }
 
 
@@ -180,9 +187,9 @@ public class MainActivity extends AppCompatActivity {
      * @pre reminder != null
      * @post The list of geofences that this activity contains now contains the newly created geofence object.
      * */
-    private void createGeofence(Reminder reminder){
+    private void createGeofence(ReminderEntity reminder){
         geofenceList.add(new Geofence.Builder()
-                .setRequestId(reminder.getGeofenceID())
+                .setRequestId(reminder.getID())
                 .setCircularRegion(
                         reminder.getLatitude(),
                         reminder.getLongitude(),

@@ -1,12 +1,10 @@
 package com.example.georeminder;
 
-import android.content.Context;
-import android.widget.Toast;
-
 /**
  * @author jentevandersanden
  * This class can be used to add reminders to the database instance
  * or
+ * delete them from the database instance
  */
 public class DatabasePopulator{
 
@@ -20,6 +18,16 @@ public class DatabasePopulator{
     }
 
     /**
+     * Deletes a new reminder from the database
+     * @param db : The database instance
+     * @param reminder : The reminder to be inserted
+     */
+    public static void deleteReminder(AppDatabase db, ReminderEntity reminder){
+        db.reminderDAO().deleteReminder(reminder);
+    }
+
+
+    /**
      * Adds a test reminder to the database instance
      * @param db : The database instance
      */
@@ -30,6 +38,5 @@ public class DatabasePopulator{
             reminder.setLatitude(50.925665);
             reminder.setMessage("You've just entered the area!");
             addReminder(db, reminder);
-
     }
 }
