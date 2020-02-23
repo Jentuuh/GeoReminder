@@ -1,11 +1,14 @@
 package com.example.georeminder;
 
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
 import android.util.Log;
+
+
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofenceStatusCodes;
@@ -45,6 +48,13 @@ public class GeofenceBroadcastReceiver extends BroadcastReceiver {
             // Send a notification + log the transition details
             //TODO: send a notification
 
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "geofencenotif")
+                    .setSmallIcon(R.drawable.ic_stat_name)
+                    .setContentTitle("Test").setContentText("test")
+                    .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+            NotificationManagerCompat notifManager = NotificationManagerCompat.from(context);
+            notifManager.notify(200, builder.build());
+
             Log.i(TAG, geofenceTransitionDetails);
         }
         else {
@@ -52,6 +62,8 @@ public class GeofenceBroadcastReceiver extends BroadcastReceiver {
             Log.e(TAG, "Invalid transition type");
         }
     }
+
+
 
     /**
      * Gets all the details on a certain transition (together with all the ID's of the triggered
