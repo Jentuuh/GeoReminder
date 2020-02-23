@@ -5,4 +5,5 @@
     <string name="geofence_transition_exited">Exited a Geofence</string>
     <string name="unknown_transition">An unknown transition took place</string>
     <string name="title_activity_maps2">Map</string>
+    <string name="title_activity_new_reminder">Map</string>
 </resources>

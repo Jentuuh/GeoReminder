@@ -31,8 +31,11 @@
             android:value="@string/google_maps_key" />
 
         <activity
+            android:name=".NewReminderActivity"
+            android:label="@string/title_activity_new_reminder"></activity>
+        <activity
             android:name=".MapsActivity"
-            android:label="@string/title_activity_maps"></activity>
+            android:label="@string/title_activity_maps" />
 
         <receiver android:name=".GeofenceBroadcastReceiver" />
 
