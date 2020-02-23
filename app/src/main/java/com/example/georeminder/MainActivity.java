@@ -6,6 +6,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -166,6 +167,7 @@ public class MainActivity extends AppCompatActivity {
                     ReminderEntity reminder = reminders.get(position);
                     Intent showReminderIntent = new Intent(getApplicationContext(), MapsActivity.class);
                     showReminderIntent.putExtra("ID", reminder.getID());
+                    showReminderIntent.putExtra("MSG", reminder.getMessage());
                     showReminderIntent.putExtra("LONG", reminder.getLongitude());
                     showReminderIntent.putExtra("LAT", reminder.getLatitude());
                     showReminderIntent.putExtra("RADIUS", reminder.getRadius());
@@ -196,7 +198,7 @@ public class MainActivity extends AppCompatActivity {
      * */
     private void createGeofence(ReminderEntity reminder){
         geofenceList.add(new Geofence.Builder()
-                .setRequestId(reminder.getID())
+                    .setRequestId(String.valueOf(reminder.getID()))
                 .setCircularRegion(
                         reminder.getLatitude(),
                         reminder.getLongitude(),
@@ -247,8 +249,21 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent addIntent = new Intent(getApplicationContext(), NewReminderActivity.class);
-                startActivity(addIntent);
+                startActivityForResult(addIntent, 1);
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1) {
+            if (resultCode == Activity.RESULT_OK) {
+                ReminderEntity last = reminderDatabase.reminderDAO().getLast();
+                reminders.add(last);
+                initializeListView();
+                initializeGeofence();
+            }
+        }
     }
 }

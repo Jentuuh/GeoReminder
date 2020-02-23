@@ -33,7 +33,7 @@ public class DatabasePopulator{
      */
     public static void addTestReminder(AppDatabase db){
             ReminderEntity reminder = new ReminderEntity();
-            reminder.setID("003");
+            reminder.setID("1");
             reminder.setLongitude(5.391212);
             reminder.setLatitude(50.925665);
             reminder.setRadius(500f);

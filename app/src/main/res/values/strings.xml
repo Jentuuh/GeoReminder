@@ -6,4 +6,8 @@
     <string name="unknown_transition">An unknown transition took place</string>
     <string name="title_activity_maps2">Map</string>
     <string name="title_activity_new_reminder">Map</string>
+    <string name="instruction_radius_description">Choose the radius</string>
+    <string name="instruction_message_description">Enter the message</string>
+    <string name="radius_description">%1$s meters</string>
+    <string name="error_required">Required</string>
 </resources>

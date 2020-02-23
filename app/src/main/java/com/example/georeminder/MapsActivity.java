@@ -44,21 +44,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         Intent intent = getIntent();
         String id = intent.getStringExtra("ID");
+        String message = intent.getStringExtra("MSG");
         double longtitude = intent.getDoubleExtra("LONG", 0);
         double latitude = intent.getDoubleExtra("LAT", 0);
         float radius = intent.getFloatExtra("RADIUS", 0);
 
         // Show geofence from reminder and move/zoom the camera to it
         LatLng reminderPlace = new LatLng(latitude, longtitude);
-        mMap.addMarker(new MarkerOptions().position(reminderPlace).title(id));
+        mMap.addMarker(new MarkerOptions().position(reminderPlace).title(message));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(reminderPlace));
         mMap.addCircle(new CircleOptions()
                         .center(reminderPlace)
                         .radius(radius)
                         .strokeColor(Color.RED)
                         .fillColor(0x2500ff00));
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(reminderPlace,
-                getZoomLevel(radius)));
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(reminderPlace, getZoomLevel(radius)));
     }
 
     public int getZoomLevel(float radius) {
