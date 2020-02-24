@@ -11,7 +11,7 @@ public class ReminderEntity{
 
     /** Columns */
     @PrimaryKey @NonNull
-    public String ID;
+    private String ID;
 
     @ColumnInfo(name = "message")
     private String message;

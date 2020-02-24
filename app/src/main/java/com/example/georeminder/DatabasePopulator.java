@@ -18,7 +18,7 @@ public class DatabasePopulator{
     }
 
     /**
-     * Deletes a new reminder from the database
+     * Deletes a reminder from the database
      * @param db : The database instance
      * @param reminder : The reminder to be inserted
      */
@@ -36,7 +36,7 @@ public class DatabasePopulator{
             reminder.setID("1");
             reminder.setLongitude(5.391212);
             reminder.setLatitude(50.925665);
-            reminder.setRadius(500f);
+            reminder.setRadius(500.0f);
             reminder.setMessage("You've just entered the area!");
             addReminder(db, reminder);
     }
