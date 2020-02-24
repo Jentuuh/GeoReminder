@@ -1,5 +1,4 @@
 package com.example.georeminder;
-import android.content.pm.PackageManager;
 
 import androidx.room.*;
 

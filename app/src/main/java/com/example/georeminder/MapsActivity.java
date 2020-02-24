@@ -10,11 +10,13 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+/**
+ * Activity Class that allows the reminders to be shown
+ */
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
     private GoogleMap mMap;
 
@@ -61,6 +63,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(reminderPlace, getZoomLevel(radius)));
     }
 
+    /**
+     * Calculates the zoomLevel according to the given radius
+     * @param radius
+     */
     public int getZoomLevel(float radius) {
         double scale = radius / 500;
         int zoomLevel =(int) (16 - Math.log(scale) / Math.log(2));

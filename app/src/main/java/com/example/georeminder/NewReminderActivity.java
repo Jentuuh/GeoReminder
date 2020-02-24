@@ -23,7 +23,9 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnSuccessListener;
 
-
+/**
+ * Activity Class that handles the creation of new reminders
+ */
 public class NewReminderActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
@@ -47,9 +49,6 @@ public class NewReminderActivity extends FragmentActivity implements OnMapReadyC
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        reminder = new ReminderEntity();
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-
         instructionTitle = (TextView) findViewById(R.id.instructionTitle);
         instructionSubtitle = (TextView) findViewById(R.id.instructionSubtitle);
         radiusBar = (SeekBar) findViewById(R.id.radiusBar);
@@ -57,6 +56,9 @@ public class NewReminderActivity extends FragmentActivity implements OnMapReadyC
         message = (EditText) findViewById(R.id.message);
         marker = (ImageView) findViewById(R.id.marker);
         next = (Button) findViewById(R.id.next);
+
+        reminder = new ReminderEntity();
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
         instructionTitle.setVisibility(View.GONE);
         instructionSubtitle.setVisibility(View.GONE);
@@ -119,12 +121,20 @@ public class NewReminderActivity extends FragmentActivity implements OnMapReadyC
         showLocationSetup();
     }
 
+    /**
+     * Calculates the zoomLevel according to the given radius
+     * @param radius : radius of geofence reminder
+     */
     public int getZoomLevel(float radius) {
         double scale = radius / 500;
         int zoomLevel =(int) (16 - Math.log(scale) / Math.log(2));
         return zoomLevel - 1;
     }
 
+    /**
+     * Updates all the objects dependent on the radius according to the given progress (SeekBar)
+     * @param progress : progress of a SeekBar
+     */
     private void updateRadiusWithProgress(int progress) {
         int radius = Math.round(getRadius(progress));
         reminder.setRadius((float)radius);
@@ -138,10 +148,17 @@ public class NewReminderActivity extends FragmentActivity implements OnMapReadyC
                 .fillColor(0x2500ff00));
     }
 
+    /**
+     * Calculates the radius according to the given progress
+     * @param progress : progress of a SeekBar
+     */
     private float getRadius(int progress) {
         return 100 + (2 * progress + 1) * 100;
     }
 
+    /**
+     * Sets up the GUI to choose the location
+     */
     public void showLocationSetup() {
         instructionTitle.setVisibility(View.VISIBLE);
         instructionSubtitle.setVisibility(View.VISIBLE);
@@ -161,6 +178,9 @@ public class NewReminderActivity extends FragmentActivity implements OnMapReadyC
         });
     }
 
+    /**
+     * Sets up the GUI to choose the radius
+     */
     public void showRadiusSetup() {
         instructionTitle.setVisibility(View.VISIBLE);
         instructionSubtitle.setVisibility(View.GONE);
@@ -182,6 +202,9 @@ public class NewReminderActivity extends FragmentActivity implements OnMapReadyC
         });
     }
 
+    /**
+     * Sets up the GUI to choose the message
+     */
     public void showMessageSetup() {
         instructionTitle.setVisibility(View.VISIBLE);
         instructionSubtitle.setVisibility(View.GONE);
@@ -207,6 +230,10 @@ public class NewReminderActivity extends FragmentActivity implements OnMapReadyC
         });
     }
 
+    /**
+     * Adds the given reminder to the database
+     * @param reminder : reminder to add
+     */
     public void addReminder(ReminderEntity reminder) {
         AppDatabase db = AppDatabase.getReminderDatabase(getApplicationContext());
 

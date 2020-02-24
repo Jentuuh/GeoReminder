@@ -15,9 +15,15 @@ import androidx.annotation.Nullable;
 
 import java.util.List;
 
-
+/**
+ * Class that implements a custom structure of ArrayAdapter : ReminderAdapter
+ */
 public class ReminderAdapter extends ArrayAdapter<ReminderEntity> {
+
     private Context context;
+    private TextView id;
+    private Button deleteBtn;
+
     private AppDatabase db;
     private List<ReminderEntity> reminders;
 
@@ -37,11 +43,10 @@ public class ReminderAdapter extends ArrayAdapter<ReminderEntity> {
 
         final ReminderEntity currentReminder = reminders.get(position);
 
-        TextView id = (TextView)listItem.findViewById(R.id.textView_id);
+        id = (TextView)listItem.findViewById(R.id.textView_id);
+        deleteBtn = (Button)listItem.findViewById(R.id.delete_btn);
+
         id.setText(currentReminder.getID());
-
-        Button deleteBtn = (Button)listItem.findViewById(R.id.delete_btn);
-
         deleteBtn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {

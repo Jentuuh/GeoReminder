@@ -2,7 +2,6 @@ package com.example.georeminder;
 import androidx.annotation.NonNull;
 import androidx.room.*;
 
-
 /**
  * @author jentevandersanden
  * Class that represents the row ReminderEntity in the table Reminders */

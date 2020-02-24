@@ -3,7 +3,6 @@ package com.example.georeminder;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
@@ -246,7 +245,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * This method starts (or updates) a GeofenceBroadcastReceiver, that handles all the
      * Geofence transitions at runtime.
-     * @return PendingIntent: a PendingIntent object that represents the BroadcastReceiver
+     * @return PendingIntent : a PendingIntent object that represents the BroadcastReceiver
      */
     private PendingIntent getGeofencePendingIntent(){
         // Reuse the PendingIntent if we already have it.
@@ -260,7 +259,6 @@ public class MainActivity extends AppCompatActivity {
                 PendingIntent.FLAG_UPDATE_CURRENT);
         return geofencePendingIntent;
     }
-
 
 
     @Override

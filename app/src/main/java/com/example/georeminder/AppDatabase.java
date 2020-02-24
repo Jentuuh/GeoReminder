@@ -5,7 +5,6 @@ import androidx.room.*;
 import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-
 /**
  * @author jentevandersanden
  * Abstract class that represents the database holder for the database

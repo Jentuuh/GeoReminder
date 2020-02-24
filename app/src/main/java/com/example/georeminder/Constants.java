@@ -1,4 +1,4 @@
-    package com.example.georeminder;
+package com.example.georeminder;
 
 /**
  * @author jentevandersanden
