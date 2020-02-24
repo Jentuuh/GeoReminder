@@ -103,7 +103,6 @@ public class NewReminderActivity extends FragmentActivity implements OnMapReadyC
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-
         AppDatabase.getReminderDatabase(getApplicationContext());
 
         fusedLocationClient.getLastLocation()
@@ -124,6 +123,7 @@ public class NewReminderActivity extends FragmentActivity implements OnMapReadyC
     /**
      * Calculates the zoomLevel according to the given radius
      * @param radius : radius of geofence reminder
+     * @return zoomLevel : calculated from radius
      */
     public int getZoomLevel(float radius) {
         double scale = radius / 500;
@@ -151,6 +151,7 @@ public class NewReminderActivity extends FragmentActivity implements OnMapReadyC
     /**
      * Calculates the radius according to the given progress
      * @param progress : progress of a SeekBar
+     * @return radius : calculated from progress
      */
     private float getRadius(int progress) {
         return 100 + (2 * progress + 1) * 100;
