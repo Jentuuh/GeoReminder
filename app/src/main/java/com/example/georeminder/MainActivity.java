@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         // Add button functionality
-        //setupAddButtonListener();
+        setupAddButtonListener();
     }
 
     /**
@@ -272,5 +272,20 @@ public class MainActivity extends AppCompatActivity {
                 initializeGeofence();
             }
         }
+    }
+
+
+    /**
+     * Method that sets up the listener of addButton
+     */
+    public void setupAddButtonListener() {
+        addButton = (FloatingActionButton)  findViewById(R.id.addButton);
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent addIntent = new Intent(getApplicationContext(), NewReminderActivity.class);
+                startActivityForResult(addIntent, 1);
+            }
+        });
     }
 }
