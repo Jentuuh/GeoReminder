@@ -1,19 +1,27 @@
 package com.example.georeminder;
 
-import androidx.core.view.ViewCompat;
 import androidx.fragment.app.FragmentActivity;
 
-import android.media.Image;
+import android.graphics.Color;
+import android.location.Location;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CircleOptions;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.OnSuccessListener;
 
 
 public class NewReminderActivity extends FragmentActivity implements OnMapReadyCallback {
@@ -25,6 +33,10 @@ public class NewReminderActivity extends FragmentActivity implements OnMapReadyC
     private TextView radiusDescription;
     private EditText message;
     private ImageView marker;
+    private Button next;
+
+    private FusedLocationProviderClient fusedLocationClient;
+    private ReminderEntity reminder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,20 +47,44 @@ public class NewReminderActivity extends FragmentActivity implements OnMapReadyC
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        reminder = new ReminderEntity();
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+
         instructionTitle = (TextView) findViewById(R.id.instructionTitle);
         instructionSubtitle = (TextView) findViewById(R.id.instructionSubtitle);
         radiusBar = (SeekBar) findViewById(R.id.radiusBar);
         radiusDescription = (TextView) findViewById(R.id.radiusDescription);
         message = (EditText) findViewById(R.id.message);
         marker = (ImageView) findViewById(R.id.marker);
+        next = (Button) findViewById(R.id.next);
 
         instructionTitle.setVisibility(View.GONE);
         instructionSubtitle.setVisibility(View.GONE);
         radiusBar.setVisibility(View.GONE);
         radiusDescription.setVisibility(View.GONE);
         message.setVisibility(View.GONE);
+        marker.setVisibility(View.GONE);
+        next.setVisibility(View.GONE);
 
-        ViewCompat.setTranslationZ(marker, 2);
+        RelativeLayout parentLayout = (RelativeLayout) marker.getParent();
+        parentLayout.bringChildToFront(marker);
+
+        radiusBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean b) {
+                updateRadiusWithProgress(progress);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
     }
 
 
@@ -65,7 +101,45 @@ public class NewReminderActivity extends FragmentActivity implements OnMapReadyC
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
+
+        AppDatabase.getReminderDatabase(getApplicationContext());
+
+        fusedLocationClient.getLastLocation()
+                .addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+                        // Got last known location. In some rare situations this can be null.
+                        if (location != null) {
+                            LatLng lastLocation = new LatLng(location.getLatitude(), location.getLongitude());
+                            mMap.moveCamera(CameraUpdateFactory.newLatLng(lastLocation));
+                            mMap.animateCamera(CameraUpdateFactory.zoomTo(getZoomLevel(2000f)));
+                        }
+                    }
+                });
         showLocationSetup();
+    }
+
+    public int getZoomLevel(float radius) {
+        double scale = radius / 500;
+        int zoomLevel =(int) (16 - Math.log(scale) / Math.log(2));
+        return zoomLevel - 1;
+    }
+
+    private void updateRadiusWithProgress(int progress) {
+        int radius = Math.round(getRadius(progress));
+        reminder.setRadius((float)radius);
+        radiusDescription.setText(getString(R.string.radius_description, Integer.toString(radius)));
+        LatLng reminderLocation = new LatLng(reminder.getLatitude(), reminder.getLongitude());
+        mMap.clear();
+        mMap.addCircle(new CircleOptions()
+                .center(reminderLocation)
+                .radius(radius)
+                .strokeColor(Color.RED)
+                .fillColor(0x2500ff00));
+    }
+
+    private float getRadius(int progress) {
+        return 100 + (2 * progress + 1) * 100;
     }
 
     public void showLocationSetup() {
@@ -74,5 +148,76 @@ public class NewReminderActivity extends FragmentActivity implements OnMapReadyC
         radiusBar.setVisibility(View.GONE);
         radiusDescription.setVisibility(View.GONE);
         message.setVisibility(View.GONE);
+        marker.setVisibility(View.VISIBLE);
+        next.setVisibility(View.VISIBLE);
+
+        next.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                reminder.setLatitude(mMap.getCameraPosition().target.latitude);
+                reminder.setLongitude(mMap.getCameraPosition().target.longitude);
+                showRadiusSetup();
+            }
+        });
     }
+
+    public void showRadiusSetup() {
+        instructionTitle.setVisibility(View.VISIBLE);
+        instructionSubtitle.setVisibility(View.GONE);
+        radiusBar.setVisibility(View.VISIBLE);
+        radiusDescription.setVisibility(View.VISIBLE);
+        message.setVisibility(View.GONE);
+        marker.setVisibility(View.GONE);
+        next.setVisibility(View.VISIBLE);
+        instructionTitle.setText(getString(R.string.instruction_radius_description));
+
+        updateRadiusWithProgress(2);
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(getZoomLevel(1000f)));
+
+        next.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showMessageSetup();
+            }
+        });
+    }
+
+    public void showMessageSetup() {
+        instructionTitle.setVisibility(View.VISIBLE);
+        instructionSubtitle.setVisibility(View.GONE);
+        radiusBar.setVisibility(View.GONE);
+        radiusDescription.setVisibility(View.GONE);
+        message.setVisibility(View.VISIBLE);
+        marker.setVisibility(View.GONE);
+        next.setVisibility(View.VISIBLE);
+        instructionTitle.setText(getString(R.string.instruction_message_description));
+
+        next.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                reminder.setMessage(message.getText().toString());
+
+                if (reminder.getMessage().isEmpty() || reminder.getMessage() == null) {
+                    message.setError(getString(R.string.error_required));
+                } else {
+                    addReminder(reminder);
+                }
+                finish();
+            }
+        });
+    }
+
+    public void addReminder(ReminderEntity reminder) {
+        AppDatabase db = AppDatabase.getReminderDatabase(getApplicationContext());
+
+        // Get new ID
+        ReminderEntity lastReminder = db.reminderDAO().getLast();
+        String lastID = lastReminder.getID();
+        String newID = String.valueOf(Integer.parseInt(lastID) + 1);
+        reminder.setID(newID);
+
+        db.reminderDAO().insertReminder(reminder);
+        setResult(RESULT_OK, getIntent());
+    }
+
 }
