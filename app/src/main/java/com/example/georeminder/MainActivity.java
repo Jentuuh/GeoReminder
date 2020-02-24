@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
     private ReminderAdapter reminderAdapter;
     private FloatingActionButton addButton;
     private List<ReminderEntity> reminders;
+    private NotificationChannel notificationChannel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,8 +123,10 @@ public class MainActivity extends AppCompatActivity {
             geofencingClient = LocationServices.getGeofencingClient(this);
 
             // Adds geofences (reminders) from database to the list of geofences
-            for (ReminderEntity reminder : reminders)
-                createGeofence(reminder);
+            if(!(reminders.isEmpty())) {
+                for (ReminderEntity reminder : reminders)
+                    createGeofence(reminder);
+            }
 
             // We add our list of created geofence-objects to the application
             geofencingClient.addGeofences(getGeofencingRequest(), getGeofencePendingIntent())
@@ -146,15 +149,16 @@ public class MainActivity extends AppCompatActivity {
         }
 
     private void createNotificationChannel(){
+
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-            CharSequence name = "NotifChannel";
+            CharSequence name = Constants.GEOFENCE_CHANNEL_ID;
             String description = "Channel for GeoFence notifications";
             int importance = NotificationManager.IMPORTANCE_DEFAULT;
-            NotificationChannel channel = new NotificationChannel("geofencenotif", name, importance);
-            channel.setDescription(description);
+            notificationChannel = new NotificationChannel(Constants.GEOFENCE_CHANNEL_ID, name, importance);
+            notificationChannel.setDescription(description);
 
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);
+            notificationManager.createNotificationChannel(notificationChannel);
         }
     }
 

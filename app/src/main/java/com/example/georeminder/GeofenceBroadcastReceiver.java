@@ -1,5 +1,7 @@
 package com.example.georeminder;
 
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -46,15 +48,15 @@ public class GeofenceBroadcastReceiver extends BroadcastReceiver {
             String geofenceTransitionDetails = getGeofenceTransitionDetails(geofenceTransition,triggeredGeofences);
 
             // Send a notification + log the transition details
-            //TODO: send a notification
-
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "geofencenotif")
-                    .setSmallIcon(R.drawable.ic_stat_name)
-                    .setContentTitle("Test").setContentText("test")
-                    .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                    .setAutoCancel(true);
-            NotificationManagerCompat notifManager = NotificationManagerCompat.from(context);
-            notifManager.notify(200, builder.build());
+            /** All notifications are sent */
+            for(int i = 0; i < triggeredGeofences.size(); i++) {
+                // Get every triggered geofence's ID
+                String geoID = (triggeredGeofences.get(i)).getRequestId();
+                // Get the reminder message, based on the ID
+                String message = AppDatabase.getReminderDatabase(context).reminderDAO().getMessage(geoID);
+                // Show the notification
+                showNotification(context, message);
+            }
 
             Log.i(TAG, geofenceTransitionDetails);
         }
@@ -86,6 +88,28 @@ public class GeofenceBroadcastReceiver extends BroadcastReceiver {
 
         return geofenceTransitionString + ": " + triggeredGeofencesID;
 
+    }
+
+    /**
+     * This method creates the PendingIntent that belongs to the notification, builds
+     * the notification and shows it on screen.
+     * @param context : The context of the activity that caused the notification
+     */
+    private void showNotification(Context context, String message){
+        PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
+                new Intent(context, MainActivity.class), 0);
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, Constants.GEOFENCE_CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_map)
+                .setContentTitle("GeoReminder")
+                .setContentText(message)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
+        builder.setContentIntent(contentIntent);
+        builder.setDefaults(Notification.DEFAULT_SOUND);
+        builder.setAutoCancel(true);
+        NotificationManagerCompat notifManager = NotificationManagerCompat.from(context);
+        notifManager.notify(1, builder.build());
     }
 
 
