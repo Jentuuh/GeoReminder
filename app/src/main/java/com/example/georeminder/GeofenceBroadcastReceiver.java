@@ -51,7 +51,8 @@ public class GeofenceBroadcastReceiver extends BroadcastReceiver {
             NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "geofencenotif")
                     .setSmallIcon(R.drawable.ic_stat_name)
                     .setContentTitle("Test").setContentText("test")
-                    .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+                    .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                    .setAutoCancel(true);
             NotificationManagerCompat notifManager = NotificationManagerCompat.from(context);
             notifManager.notify(200, builder.build());
 

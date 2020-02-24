@@ -146,7 +146,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
     private void createNotificationChannel(){
-
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
             CharSequence name = "NotifChannel";
             String description = "Channel for GeoFence notifications";
@@ -156,7 +155,6 @@ public class MainActivity extends AppCompatActivity {
 
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
-
         }
     }
 
